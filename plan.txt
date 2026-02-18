@@ -1,0 +1,12 @@
+1. Business Analysis (Tamires)
+2. Developer (Thomas)
+3. Quality Assurance (Marcus)
+4. IT Operations (Luan)
+
+- We ask the user questions.
+- Questions are selected randomly.
+- Each question has 4 answers you pick from, one is correct.
+- The user starts with €10. For each question they get right, it's doubled.
+- After each question, you can choose whether to continue or stop and keep the money you've earned.
+- If they get a question wrong, you fail and lose the money.
+- After losing, you can start again.
