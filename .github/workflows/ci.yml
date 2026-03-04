@@ -1,0 +1,21 @@
+name: Basic CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-page:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Start simple server
+        run: |
+          python3 -m http.server 8000 &
+          sleep 3
+
+      - name: Smoke test
+        run: curl -I http://localhost:8000
