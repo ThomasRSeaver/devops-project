@@ -1,4 +1,4 @@
-name: Basic CI
+name: CI (Smoke + Docker)
 
 on:
   push:
@@ -12,10 +12,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Basic smoke test (simple server)
       - name: Start simple server
         run: |
           python3 -m http.server 8000 &
           sleep 3
 
-      - name: Smoke test
+      - name: Smoke test (basic)
         run: curl -I http://localhost:8000
+
+      # Docker build + run + smoke test
+      - name: Build Docker image
+        run: docker build -t devops-quiz:ci .
+
+      - name: Run Docker container
+        run: docker run -d -p 8080:80 --name devops-quiz-container devops-quiz:ci
+
+      - name: Smoke test (Docker)
+        run: |
+          sleep 2
+          curl -I http://localhost:8080
+
+      - name: Show container logs (debug)
+        if: always()
+        run: docker logs devops-quiz-container
