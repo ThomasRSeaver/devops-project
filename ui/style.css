@@ -101,3 +101,7 @@ button:hover,
   margin-top: 20px;
   font-weight: bold;
 }
+
+.answer.selected {
+  outline: 3px solid #222;
+}
