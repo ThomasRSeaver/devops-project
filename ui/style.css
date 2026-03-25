@@ -96,3 +96,8 @@ button:hover,
   color: white;
   font-weight: bold;
 }
+
+#feedback {
+  margin-top: 20px;
+  font-weight: bold;
+}
