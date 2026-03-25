@@ -1,0 +1,1 @@
+console.log("UI placeholder for future quiz integration");
