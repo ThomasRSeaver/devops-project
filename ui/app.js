@@ -1,1 +1,1 @@
-console.log("DevOps Quiz local page loaded");
+console.log("DevOps Quiz UI preview loaded");
