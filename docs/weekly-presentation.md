@@ -8,17 +8,16 @@ We are in the early implementation stage of the project.
 - Initial Python quiz structure
 - CI workflow with GitHub Actions
 - Docker integration
-- Initial project organisation
+- Project organisation and documentation
+- Local UI page for demonstration
 
 ## Current challenges
-- Repository still needs cleanup
 - Testing ownership changed after team member loss
-- CI workflow needs to align fully with Python execution
+- Quiz functionality still needs improvement
 - Team coordination is still being stabilised
 
 ## Next steps
-- Finalise repository structure
-- Improve Docker configuration
-- Update CI workflow for Python quiz
-- Define shared QA process
-- Continue Python feature implementation
+- Improve quiz logic
+- Add shared testing evidence
+- Continue Docker and CI alignment
+- Support deployment planning

@@ -1,1 +1,1 @@
-console.log("Future UI prototype");
+console.log("DevOps Quiz local page loaded");
