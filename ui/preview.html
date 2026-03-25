@@ -33,22 +33,22 @@
 
       <div class="card side-card">
         <h3>Prize Ladder</h3>
-        <ul class="ladder">
-          <li>€160</li>
-          <li>€80</li>
-          <li class="active">€40</li>
-          <li>€20</li>
-          <li>€10</li>
+        <ul class="ladder" id="ladder">
+            <li data-step="5">€160</li>
+            <li data-step="4">€80</li>
+            <li data-step="3">€40</li>
+            <li data-step="2">€20</li>
+            <li data-step="1" class="active">€10</li>
         </ul>
 
         <h3>Status</h3>
-        <p>Current prize: <strong>€10</strong></p>
+        <p>Current prize: <strong id="current-prize">€10</strong></p>
         <p>Mode: Demo / Preview</p>
       </div>
     </div>
   </div>
 
   <script src="app.js"></script>
-  
+
 </body>
 </html>
