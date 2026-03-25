@@ -1,1 +1,1 @@
-console.log("UI placeholder for future quiz integration");
+console.log("Future UI prototype");

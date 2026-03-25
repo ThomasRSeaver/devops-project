@@ -1,6 +1,19 @@
-.idea/
-*.iml
-__pycache__/
-*.pyc
-.DS_Store
-Thumbs.db
+name: CI (Python + Docker)
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-quiz:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t devops-quiz:ci -f ops/Dockerfile .
+
+      - name: Run Python quiz container
+        run: docker run --rm devops-quiz:ci
