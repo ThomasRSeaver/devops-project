@@ -12,39 +12,89 @@
       <div class="hero-badge">Hosted Quiz Application</div>
       <h1>DevOps Quiz</h1>
       <p class="subtitle">
-        A cloud-hosted quiz project inspired by game-show style interaction,
-        enhanced with Docker, CI workflow validation, and health monitoring.
+        A simple quiz application inspired by “Who Wants to Be a Millionaire”,
+        built to demonstrate DevOps practices through a working hosted solution.
       </p>
     </section>
 
     <section class="grid">
-      <div class="card">
-        <h2>Project Status</h2>
+      <div class="card highlight-card">
+        <h2>Project Overview</h2>
+        <p>
+          This project is a simple quiz application inspired by
+          <strong>"Who Wants to Be a Millionaire"</strong>.
+        </p>
+        <p>
+          The goal is not to build a complex product, but to apply DevOps practices such as:
+        </p>
         <ul>
-          <li>Python quiz running as a web application</li>
-          <li>Docker container working locally</li>
-          <li>GitHub Actions CI implemented</li>
-          <li>Hosted online with health check</li>
+          <li>Continuous Integration (GitHub Actions)</li>
+          <li>Containerisation (Docker)</li>
+          <li>Version Control (GitHub)</li>
         </ul>
       </div>
 
       <div class="card">
-        <h2>DevOps Features</h2>
+        <h2>Current Status</h2>
         <ul>
-          <li>Version Control with GitHub</li>
-          <li>Continuous Integration with GitHub Actions</li>
-          <li>Docker containerisation</li>
-          <li>Hosting, logging and health monitoring</li>
+          <li>Initial Python quiz structure created</li>
+          <li>Docker container working locally</li>
+          <li>CI pipeline configured</li>
+          <li>Project structure organised</li>
+          <li>Hosted web version available for demo and presentation</li>
         </ul>
+      </div>
+
+      <div class="card">
+        <h2>Next Steps</h2>
+        <ul>
+          <li>Improve testing evidence</li>
+          <li>Enhance DevOps pipeline</li>
+          <li>Continue deployment planning</li>
+          <li>Refine the quiz experience further</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Team Roles</h2>
+        <ul>
+          <li>Business Analyst: Tamires</li>
+          <li>Developer: Thomas</li>
+          <li>IT Operations: Luan</li>
+          <li>Testing: Shared (previously assigned to Asia)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Functional Requirements</h2>
+        <ul>
+          <li>The system asks the user quiz questions</li>
+          <li>Questions are selected randomly</li>
+          <li>Each question has 4 possible answers, with only 1 correct</li>
+          <li>The user starts with €10</li>
+          <li>Each correct answer doubles the current amount</li>
+          <li>After each question, the user can choose to continue or stop</li>
+          <li>If the user answers incorrectly, they lose all the money</li>
+          <li>The user can restart the game after losing</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Notes</h2>
+        <p>
+          This project is inspired by <strong>"Who Wants to Be a Millionaire"</strong>
+          and focuses on applying DevOps practices rather than building a complex application.
+        </p>
       </div>
 
       <div class="card highlight-card">
         <h2>Play for the Top Prize</h2>
         <p>
-          Answer all 10 questions correctly and climb the prize ladder.
+          Start with <strong>€10</strong>, answer random questions correctly,
+          double your money, and decide whether to continue or stop.
         </p>
         <div class="result-score">{{ top_prize }}</div>
-        <a class="button-link" href="/quiz/0?score=0">Start Quiz</a>
+        <a class="button-link" href="/start">Start Quiz</a>
         <div class="health-pill">
           <span class="health-dot"></span>
           Service status: healthy

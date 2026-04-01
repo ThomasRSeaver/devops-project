@@ -11,7 +11,7 @@
     <section class="hero">
       <div class="hero-badge">Question {{ index + 1 }} / {{ total }}</div>
       <h1>DevOps Quiz Challenge</h1>
-      <p class="subtitle">Choose the best answer and move up through the prize ladder.</p>
+      <p class="subtitle">Answer correctly to double your money, or stop and keep what you have.</p>
     </section>
 
     <div class="layout">
@@ -30,7 +30,12 @@
             </label>
           {% endfor %}
 
-          <button type="submit">Lock In Answer</button>
+          <div class="actions">
+            <button type="submit" name="action" value="answer">Lock In Answer</button>
+            <button type="submit" name="action" value="stop" class="secondary" formnovalidate>
+              Stop and Take Money
+            </button>
+          </div>
         </form>
       </div>
 
@@ -38,13 +43,13 @@
         <h3>Game Progress</h3>
 
         <div class="stat-box">
-          <div class="stat-label">Current score</div>
-          <div class="stat-value">{{ score }}</div>
+          <div class="stat-label">Current amount</div>
+          <div class="stat-value">{{ current_money }}</div>
         </div>
 
         <div class="stat-box">
-          <div class="stat-label">Current prize</div>
-          <div class="stat-value">{{ current_prize }}</div>
+          <div class="stat-label">Next correct answer</div>
+          <div class="stat-value">{{ next_amount }}</div>
         </div>
 
         <div class="stat-box">
@@ -56,7 +61,7 @@
         <ul class="ladder">
           {% for prize in prize_ladder|reverse %}
             {% set actual_index = total - loop.index0 - 1 %}
-            <li class="{% if actual_index == index %}active{% endif %}">
+            <li class="{% if actual_index == current_prize_step %}active{% endif %}">
               {{ prize }}
             </li>
           {% endfor %}
