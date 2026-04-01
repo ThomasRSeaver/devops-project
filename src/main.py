@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for, s
 from src.manageQuiz import questions
 from src.auth import create_user, verify_user
 from src.game_session import create_game_session, update_game_session_progress, finish_game_session
+from src.ranking import get_ranking, get_last_winner
 from datetime import date, datetime
 import random
 
@@ -22,6 +23,15 @@ def get_prize_ladder():
         ladder.append(amount)
         amount *= 2
     return ladder
+
+
+def format_datetime(value):
+    if not value:
+        return "-"
+    try:
+        return datetime.strptime(value, "%Y-%m-%d %H:%M:%S").strftime("%d/%m/%Y %H:%M")
+    except ValueError:
+        return value
 
 
 def start_new_game():
@@ -131,11 +141,41 @@ def logout():
 @app.route("/")
 def home():
     prize_ladder = get_prize_ladder()
+    last_winner = get_last_winner()
+
+    if last_winner:
+        last_winner_data = {
+            "full_name": last_winner["full_name"],
+            "final_amount_display": format_money(last_winner["final_amount"]),
+            "correct_answers": last_winner["correct_answers"],
+            "ended_at_display": format_datetime(last_winner["ended_at"])
+        }
+    else:
+        last_winner_data = None
+
     return render_template(
         "index.html",
         top_prize=format_money(prize_ladder[-1]),
-        user_name=session.get("user_name")
+        user_name=session.get("user_name"),
+        last_winner=last_winner_data
     )
+
+
+@app.route("/ranking")
+def ranking():
+    rows = get_ranking()
+
+    ranking_data = []
+    for row in rows:
+        ranking_data.append({
+            "full_name": row["full_name"],
+            "correct_answers": row["correct_answers"],
+            "final_amount_display": format_money(row["final_amount"]),
+            "status": row["status"],
+            "ended_at_display": format_datetime(row["ended_at"])
+        })
+
+    return render_template("ranking.html", ranking=ranking_data)
 
 
 @app.route("/start")

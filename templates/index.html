@@ -91,6 +91,16 @@
         </p>
       </div>
 
+      {% if last_winner %}
+      <div class="card">
+        <h2>Last Winner</h2>
+        <p><strong>{{ last_winner.full_name }}</strong></p>
+        <p>Prize: {{ last_winner.final_amount_display }}</p>
+        <p>Correct answers: {{ last_winner.correct_answers }}</p>
+        <p>Date: {{ last_winner.ended_at_display }}</p>
+      </div>
+      {% endif %}
+
       <div class="card highlight-card">
         <h2>Play for the Top Prize</h2>
         <p>
@@ -102,10 +112,12 @@
         <div class="actions">
           {% if user_name %}
             <a class="button-link" href="/start">Start Quiz</a>
+            <a class="button-link secondary" href="/ranking">Ranking</a>
             <a class="button-link secondary" href="/logout">Logout</a>
           {% else %}
             <a class="button-link" href="/register">Register</a>
             <a class="button-link secondary" href="/login">Login</a>
+            <a class="button-link secondary" href="/ranking">Ranking</a>
           {% endif %}
         </div>
 
