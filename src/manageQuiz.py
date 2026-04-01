@@ -1,4 +1,4 @@
-from quiz_question import quiz_question
+from src.quiz_question import quiz_question
 
 Q1 = quiz_question(
     "What is the capital of Poland?",

@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-from manageQuiz import questions
+from src.manageQuiz import questions
 
 app = Flask(__name__, template_folder="../templates", static_folder="../static")
 
