@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="container">
+  <section class="hero">
+    <div class="hero-badge">User Access</div>
+    <h1>Login</h1>
+    <p class="subtitle">Sign in to access your account and play the quiz.</p>
+  </section>
+
+  <div class="form-card">
+    <div class="card">
+      {% if error %}
+        <p class="message-error">{{ error }}</p>
+      {% endif %}
+
+      {% if success %}
+        <p class="message-success">{{ success }}</p>
+      {% endif %}
+
+      <form method="POST" class="form-grid">
+        <label>
+          <span class="form-label">Email</span>
+          <input class="form-input" type="email" name="email" required>
+        </label>
+
+        <label>
+          <span class="form-label">Password</span>
+          <input class="form-input" type="password" name="password" required>
+        </label>
+
+        <div class="actions">
+          <button type="submit">Login</button>
+          <a class="button-link secondary" href="/register">Create Account</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

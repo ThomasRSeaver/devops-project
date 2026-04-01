@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+<div class="container">
+  <section class="hero">
+    <div class="hero-badge">User Account</div>
+    <h1>My Account</h1>
+    <p class="subtitle">Your account details and personal game history.</p>
+  </section>
+
+  <div class="grid">
+    <div class="card">
+      <h2>User Details</h2>
+      <p><strong>Name:</strong> {{ user.full_name }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Date of Birth:</strong> {{ user.date_of_birth }}</p>
+      <p><strong>18+ Access:</strong> {% if user.is_18_or_over %}Yes{% else %}No{% endif %}</p>
+      <p><strong>Account Created:</strong> {{ user.created_at_display }}</p>
+    </div>
+
+    <div class="card">
+      <h2>My Game History</h2>
+
+      {% if history %}
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Session</th>
+                <th>Correct Answers</th>
+                <th>Final Prize</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in history %}
+                <tr>
+                  <td>#{{ row.id }}</td>
+                  <td>{{ row.correct_answers }}</td>
+                  <td>{{ row.final_amount_display }}</td>
+                  <td style="text-transform:capitalize;">{{ row.status }}</td>
+                  <td>{{ row.ended_at_display }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p>No game history available yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

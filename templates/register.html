@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="container">
+  <section class="hero">
+    <div class="hero-badge">Create Account</div>
+    <h1>Register</h1>
+    <p class="subtitle">Create your account to access the quiz system.</p>
+  </section>
+
+  <div class="form-card">
+    <div class="card">
+      {% if error %}
+        <p class="message-error">{{ error }}</p>
+      {% endif %}
+
+      {% if success %}
+        <p class="message-success">{{ success }}</p>
+      {% endif %}
+
+      <form method="POST" class="form-grid">
+        <label>
+          <span class="form-label">Full Name</span>
+          <input class="form-input" type="text" name="full_name" required>
+        </label>
+
+        <label>
+          <span class="form-label">Email</span>
+          <input class="form-input" type="email" name="email" required>
+        </label>
+
+        <label>
+          <span class="form-label">Password</span>
+          <input class="form-input" type="password" name="password" required>
+        </label>
+
+        <label>
+          <span class="form-label">Date of Birth</span>
+          <input class="form-input" type="date" name="date_of_birth" required>
+        </label>
+
+        <div class="actions">
+          <button type="submit">Create Account</button>
+          <a class="button-link secondary" href="/login">Already have an account?</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

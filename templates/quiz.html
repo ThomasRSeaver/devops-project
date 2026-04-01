@@ -1,78 +1,73 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quiz Question</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-</head>
-<body>
-  <div class="container">
-    <section class="hero">
-      <div class="hero-badge">Question {{ index + 1 }} / {{ total }}</div>
-      <h1>DevOps Quiz Challenge</h1>
-      <p class="subtitle">Answer correctly to double your money, or stop and keep what you have.</p>
-    </section>
+{% extends "base.html" %}
 
-    <div class="layout">
-      <div class="card">
-        <p class="question-number">Current Question</p>
-        <h2 class="question-title">{{ question.question_text }}</h2>
+{% block title %}Quiz Question{% endblock %}
 
-        <form method="POST" class="answers">
-          {% for option in options %}
-            <label class="answer-option">
-              <input type="radio" name="answer" value="{{ option }}" required />
-              <div class="answer-box">
-                <div class="answer-letter">{{ ['A', 'B', 'C', 'D'][loop.index0] }}</div>
-                <div class="answer-text">{{ option }}</div>
-              </div>
-            </label>
-          {% endfor %}
+{% block content %}
+<div class="container">
+  <section class="hero">
+    <div class="hero-badge">Question {{ index + 1 }} / {{ total }}</div>
+    <h1>DevOps Quiz Challenge</h1>
+    <p class="subtitle">Answer correctly to double your money, or stop and keep what you have.</p>
+  </section>
 
-          <div class="actions">
-            <button type="submit" name="action" value="answer">Lock In Answer</button>
-            <button type="submit" name="action" value="stop" class="secondary" formnovalidate>
-              Stop and Take Money
-            </button>
-          </div>
-        </form>
+  <div class="layout">
+    <div class="card">
+      <p class="question-number">Current Question</p>
+      <h2 class="question-title">{{ question.question_text }}</h2>
+
+      <form method="POST" class="answers">
+        {% for option in options %}
+          <label class="answer-option">
+            <input type="radio" name="answer" value="{{ option }}" required />
+            <div class="answer-box">
+              <div class="answer-letter">{{ ['A', 'B', 'C', 'D'][loop.index0] }}</div>
+              <div class="answer-text">{{ option }}</div>
+            </div>
+          </label>
+        {% endfor %}
+
+        <div class="actions">
+          <button type="submit" name="action" value="answer">Lock In Answer</button>
+          <button type="submit" name="action" value="stop" class="secondary" formnovalidate>
+            Stop and Take Money
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card sidebar-card">
+      <h3>Game Progress</h3>
+
+      <div class="stat-box">
+        <div class="stat-label">Money secured</div>
+        <div class="stat-value">{{ current_money }}</div>
       </div>
 
-      <div class="card sidebar-card">
-        <h3>Game Progress</h3>
+      <div class="stat-box">
+        <div class="stat-label">Current question value</div>
+        <div class="stat-value">{{ next_amount }}</div>
+      </div>
 
-        <div class="stat-box">
-          <div class="stat-label">Current amount</div>
-          <div class="stat-value">{{ current_money }}</div>
-        </div>
+      <div class="stat-box">
+        <div class="stat-label">Questions remaining</div>
+        <div class="stat-value">{{ total - (index + 1) }}</div>
+      </div>
 
-        <div class="stat-box">
-          <div class="stat-label">Next correct answer</div>
-          <div class="stat-value">{{ next_amount }}</div>
-        </div>
+      <h3 style="margin-top: 22px;">Prize Ladder</h3>
+      <ul class="ladder">
+        {% for prize in prize_ladder|reverse %}
+          {% set actual_index = total - loop.index0 - 1 %}
+          <li class="{% if actual_index == current_prize_step %}active{% endif %}">
+            {{ prize }}
+          </li>
+        {% endfor %}
+      </ul>
 
-        <div class="stat-box">
-          <div class="stat-label">Questions remaining</div>
-          <div class="stat-value">{{ total - (index + 1) }}</div>
-        </div>
-
-        <h3 style="margin-top: 22px;">Prize Ladder</h3>
-        <ul class="ladder">
-          {% for prize in prize_ladder|reverse %}
-            {% set actual_index = total - loop.index0 - 1 %}
-            <li class="{% if actual_index == current_prize_step %}active{% endif %}">
-              {{ prize }}
-            </li>
-          {% endfor %}
-        </ul>
-
-        <div class="health-pill">
-          <span class="health-dot"></span>
-          System online
-        </div>
+      <div class="health-pill">
+        <span class="health-dot"></span>
+        System online
       </div>
     </div>
   </div>
-</body>
-</html>
+</div>
+{% endblock %}
