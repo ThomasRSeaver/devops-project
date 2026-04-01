@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 from src.manageQuiz import questions
+from src.auth import create_user
+from datetime import date, datetime
 import random
 
 app = Flask(__name__, template_folder="../templates", static_folder="../static")
@@ -34,6 +36,41 @@ def start_new_game():
 @app.route("/health")
 def health():
     return jsonify(status="ok", service="devops-quiz"), 200
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    error = None
+    success = None
+
+    if request.method == "POST":
+        full_name = request.form.get("full_name", "").strip()
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "").strip()
+        date_of_birth = request.form.get("date_of_birth", "").strip()
+
+        try:
+            dob = datetime.strptime(date_of_birth, "%Y-%m-%d").date()
+            today = date.today()
+            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+            is_18_or_over = age >= 18
+        except ValueError:
+            return render_template("register.html", error="Invalid date of birth.", success=None)
+
+        created, message = create_user(
+            full_name=full_name,
+            email=email,
+            password=password,
+            date_of_birth=date_of_birth,
+            is_18_or_over=is_18_or_over
+        )
+
+        if created:
+            success = message
+        else:
+            error = message
+
+    return render_template("register.html", error=error, success=success)
 
 
 @app.route("/")
