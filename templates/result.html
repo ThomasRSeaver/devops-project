@@ -10,23 +10,22 @@
   <div class="container">
     <div class="result-wrap">
       <section class="hero">
-        <div class="hero-badge">Quiz Completed</div>
-        <h1>Well Done!</h1>
-        <p class="subtitle">You reached the end of the DevOps Quiz.</p>
+        <div class="hero-badge">Quiz Result</div>
+        <h1>{{ result_title }}</h1>
+        <p class="subtitle">{{ result_message }}</p>
       </section>
 
       <div class="card highlight-card">
-        <h2>Your Final Score</h2>
-        <div class="result-score">{{ score }}/{{ total }}</div>
+        <h2>Your Final Prize</h2>
+        <div class="result-score">{{ won_amount }}</div>
         <p class="result-message">
-          Prize won: <strong>{{ won_amount }}</strong>
-        </p>
-        <p class="result-message">
-          This hosted version demonstrates application availability, health checks,
-          deployment workflow, and a working quiz experience through the web interface.
+          Correct answers: <strong>{{ score }}/{{ total }}</strong>
         </p>
 
-        <a class="button-link" href="/">Back to Home</a>
+        <div class="actions">
+          <a class="button-link" href="/start">Play Again</a>
+          <a class="button-link secondary" href="/">Back to Home</a>
+        </div>
       </div>
 
       <p class="footer-note">

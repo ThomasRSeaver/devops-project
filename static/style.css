@@ -336,3 +336,16 @@ button:hover {
   border-color: transparent;
   box-shadow: 0 10px 25px rgba(110, 168, 255, 0.25);
 }
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}

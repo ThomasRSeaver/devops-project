@@ -1,20 +1,34 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 from src.manageQuiz import questions
+import random
 
 app = Flask(__name__, template_folder="../templates", static_folder="../static")
+app.secret_key = "devops-quiz-secret-key"
 
-prize_ladder = [
-    "€100",
-    "€200",
-    "€500",
-    "€1,000",
-    "€2,000",
-    "€4,000",
-    "€8,000",
-    "€16,000",
-    "€32,000",
-    "€64,000"
-]
+START_MONEY = 10
+
+
+def format_money(amount):
+    return f"€{amount:,}"
+
+
+def get_prize_ladder():
+    ladder = []
+    amount = START_MONEY
+    for _ in range(len(questions)):
+        ladder.append(format_money(amount))
+        amount *= 2
+    return ladder
+
+
+def start_new_game():
+    question_indexes = list(range(len(questions)))
+    random.shuffle(question_indexes)
+
+    session["question_order"] = question_indexes
+    session["current_index"] = 0
+    session["money"] = START_MONEY
+    session["game_over"] = False
 
 
 @app.route("/health")
@@ -24,50 +38,102 @@ def health():
 
 @app.route("/")
 def home():
-    return render_template("index.html", top_prize=prize_ladder[-1])
+    prize_ladder = get_prize_ladder()
+    return render_template(
+        "index.html",
+        top_prize=prize_ladder[-1]
+    )
 
 
-@app.route("/quiz/<int:index>", methods=["GET", "POST"])
-def quiz(index):
-    score = int(request.args.get("score", 0))
+@app.route("/start")
+def start():
+    start_new_game()
+    return redirect(url_for("quiz"))
 
-    if index >= len(questions):
-        won_amount = prize_ladder[score - 1] if score > 0 else "€0"
+
+@app.route("/quiz", methods=["GET", "POST"])
+def quiz():
+    if "question_order" not in session or session.get("game_over"):
+        return redirect(url_for("start"))
+
+    prize_ladder = get_prize_ladder()
+    question_order = session["question_order"]
+    current_index = session["current_index"]
+    current_money = session["money"]
+
+    if current_index >= len(question_order):
+        session["game_over"] = True
         return render_template(
             "result.html",
-            score=score,
-            total=len(questions),
-            won_amount=won_amount
+            score=len(question_order),
+            total=len(question_order),
+            won_amount=format_money(current_money),
+            result_title="Congratulations!",
+            result_message="You answered all questions correctly and reached the top prize."
         )
 
-    question = questions[index]
+    question = questions[question_order[current_index]]
+    options = question.get_options()
+    random.shuffle(options)
 
     if request.method == "POST":
-        selected = request.form.get("answer")
-        if selected == question.answer_text:
-            score += 1
-        next_index = index + 1
-        return f"""
-        <html>
-            <head>
-                <meta http-equiv="refresh" content="0; url=/quiz/{next_index}?score={score}">
-            </head>
-            <body></body>
-        </html>
-        """
+        action = request.form.get("action")
 
-    options = question.get_options()
-    current_prize = prize_ladder[index]
+        if action == "stop":
+            session["game_over"] = True
+            return render_template(
+                "result.html",
+                score=current_index,
+                total=len(question_order),
+                won_amount=format_money(current_money),
+                result_title="You Chose to Stop",
+                result_message="You decided to stop the game and keep your current prize."
+            )
+
+        selected = request.form.get("answer")
+
+        if selected == question.answer_text:
+            new_money = current_money * 2
+            session["money"] = new_money
+            session["current_index"] = current_index + 1
+
+            if session["current_index"] >= len(question_order):
+                session["game_over"] = True
+                return render_template(
+                    "result.html",
+                    score=len(question_order),
+                    total=len(question_order),
+                    won_amount=format_money(new_money),
+                    result_title="Congratulations!",
+                    result_message="You answered all questions correctly and reached the top prize."
+                )
+
+            return redirect(url_for("quiz"))
+
+        session["game_over"] = True
+        session["money"] = 0
+        return render_template(
+            "result.html",
+            score=current_index,
+            total=len(question_order),
+            won_amount="€0",
+            result_title="Game Over",
+            result_message="You answered incorrectly and lost all the money."
+        )
+
+    next_amount = current_money * 2
+    current_prize_step = current_index
 
     return render_template(
         "quiz.html",
         question=question,
         options=options,
-        index=index,
-        total=len(questions),
-        score=score,
-        current_prize=current_prize,
-        prize_ladder=prize_ladder
+        index=current_index,
+        total=len(question_order),
+        current_money=format_money(current_money),
+        next_amount=format_money(next_amount),
+        prize_ladder=prize_ladder,
+        current_prize_step=current_prize_step
     )
 
 
