@@ -1,49 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Game Rules</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-</head>
-<body>
-  <div class="container">
-    <section class="hero">
-      <div class="hero-badge">Before You Start</div>
-      <h1>Game Rules</h1>
-      <p class="subtitle">Please read the rules carefully before starting the quiz.</p>
-    </section>
+{% extends "base.html" %}
 
-    <div class="result-wrap">
-      <div class="card">
-        {% if error %}
-          <p style="color:#ffb4b4; font-weight:700;">{{ error }}</p>
-        {% endif %}
+{% block title %}Game Rules{% endblock %}
 
-        <h2>How the Game Works</h2>
-        <ul>
-          <li>You start the game with <strong>€10</strong>.</li>
-          <li>Each question has 4 possible answers and only 1 correct answer.</li>
-          <li>Questions are presented in random order.</li>
-          <li>Each correct answer doubles your current amount.</li>
-          <li>After answering correctly, you may continue or stop and keep your money.</li>
-          <li>If you answer incorrectly, you lose all the money.</li>
-          <li>You can restart the game after the game ends.</li>
-        </ul>
+{% block content %}
+<div class="container">
+  <section class="hero">
+    <div class="hero-badge">Before You Start</div>
+    <h1>Game Rules</h1>
+    <p class="subtitle">Please read the rules carefully before starting the quiz.</p>
+  </section>
 
-        <form method="POST" class="answers" style="margin-top: 24px;">
-          <label style="display:flex; gap:10px; align-items:flex-start;">
-            <input type="checkbox" name="agree" value="yes" required style="margin-top: 4px;">
-            <span>I have read and understood the rules, and I agree to continue.</span>
-          </label>
+  <div class="form-card">
+    <div class="card">
+      {% if error %}
+        <p class="message-error">{{ error }}</p>
+      {% endif %}
 
-          <div class="actions">
-            <button type="submit">Continue to Game</button>
-            <a class="button-link secondary" href="/">Back to Home</a>
-          </div>
-        </form>
-      </div>
+      <h2>How the Game Works</h2>
+      <ul>
+        <li>You do not automatically win €10 at the start of the game.</li>
+        <li>You secure <strong>€10 only after answering the first question correctly</strong>.</li>
+        <li>Each question has 4 possible answers and only 1 correct answer.</li>
+        <li>Questions are presented in random order.</li>
+        <li>Each new correct answer increases your prize according to the game ladder.</li>
+        <li>After answering correctly, you may continue or stop and keep your secured prize.</li>
+        <li>If you answer incorrectly, you lose all the money.</li>
+        <li>You can restart the game after the game ends.</li>
+      </ul>
+
+      <form method="POST" class="form-grid" style="margin-top: 24px;">
+        <label style="display:flex; gap:10px; align-items:flex-start;">
+          <input type="checkbox" name="agree" value="yes" required style="margin-top: 4px;">
+          <span>I have read and understood the rules, and I agree to continue.</span>
+        </label>
+
+        <div class="actions">
+          <button type="submit">Continue to Game</button>
+          <a class="button-link secondary" href="/">Back to Home</a>
+        </div>
+      </form>
     </div>
   </div>
-</body>
-</html>
+</div>
+{% endblock %}

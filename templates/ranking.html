@@ -1,55 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ranking</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-</head>
-<body>
-  <div class="container">
-    <section class="hero">
-      <div class="hero-badge">Leaderboard</div>
-      <h1>Ranking</h1>
-      <p class="subtitle">Top game sessions based on final prize and performance.</p>
-    </section>
+{% extends "base.html" %}
 
-    <div class="card">
-      <h2>Top Players</h2>
+{% block title %}Ranking{% endblock %}
 
-      {% if ranking %}
-        <div style="overflow-x:auto;">
-          <table style="width:100%; border-collapse: collapse;">
-            <thead>
+{% block content %}
+<div class="container">
+  <section class="hero">
+    <div class="hero-badge">Leaderboard</div>
+    <h1>Ranking</h1>
+    <p class="subtitle">Top game sessions based on final prize and performance.</p>
+  </section>
+
+  <div class="card">
+    <h2>Top Players</h2>
+
+    {% if ranking %}
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th>Final Prize</th>
+              <th>Correct Answers</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in ranking %}
               <tr>
-                <th style="text-align:left; padding:12px;">Player</th>
-                <th style="text-align:left; padding:12px;">Final Prize</th>
-                <th style="text-align:left; padding:12px;">Correct Answers</th>
-                <th style="text-align:left; padding:12px;">Status</th>
-                <th style="text-align:left; padding:12px;">Date</th>
+                <td>{{ row.full_name }}</td>
+                <td>{{ row.final_amount_display }}</td>
+                <td>{{ row.correct_answers }}</td>
+                <td style="text-transform:capitalize;">{{ row.status }}</td>
+                <td>{{ row.ended_at_display }}</td>
               </tr>
-            </thead>
-            <tbody>
-              {% for row in ranking %}
-                <tr>
-                  <td style="padding:12px; border-top:1px solid rgba(255,255,255,0.1);">{{ row.full_name }}</td>
-                  <td style="padding:12px; border-top:1px solid rgba(255,255,255,0.1);">{{ row.final_amount_display }}</td>
-                  <td style="padding:12px; border-top:1px solid rgba(255,255,255,0.1);">{{ row.correct_answers }}</td>
-                  <td style="padding:12px; border-top:1px solid rgba(255,255,255,0.1); text-transform:capitalize;">{{ row.status }}</td>
-                  <td style="padding:12px; border-top:1px solid rgba(255,255,255,0.1);">{{ row.ended_at_display }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% else %}
-        <p>No completed game sessions yet.</p>
-      {% endif %}
-
-      <div class="actions">
-        <a class="button-link secondary" href="/">Back to Home</a>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
-    </div>
+    {% else %}
+      <p>No completed game sessions yet.</p>
+    {% endif %}
   </div>
-</body>
-</html>
+</div>
+{% endblock %}

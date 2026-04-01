@@ -1,137 +1,130 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DevOps Quiz</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-</head>
-<body>
-  <div class="container">
-    <section class="hero">
-      <div class="hero-badge">Hosted Quiz Application</div>
-      <h1>DevOps Quiz</h1>
-      <p class="subtitle">
-        A simple quiz application inspired by “Who Wants to Be a Millionaire”,
-        built to demonstrate DevOps practices through a working hosted solution.
-      </p>
+{% extends "base.html" %}
 
-      {% if user_name %}
-        <p class="subtitle"><strong>Welcome, {{ user_name }}!</strong></p>
-      {% endif %}
-    </section>
+{% block title %}DevOps Quiz{% endblock %}
 
-    <section class="grid">
-      <div class="card highlight-card">
-        <h2>Project Overview</h2>
-        <p>
-          This project is a simple quiz application inspired by
-          <strong>"Who Wants to Be a Millionaire"</strong>.
-        </p>
-        <p>
-          The goal is not to build a complex product, but to apply DevOps practices such as:
-        </p>
-        <ul>
-          <li>Continuous Integration (GitHub Actions)</li>
-          <li>Containerisation (Docker)</li>
-          <li>Version Control (GitHub)</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h2>Current Status</h2>
-        <ul>
-          <li>Initial Python quiz structure created</li>
-          <li>Docker container working locally</li>
-          <li>CI pipeline configured</li>
-          <li>Project structure organised</li>
-          <li>Hosted web version available for demo and presentation</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h2>Next Steps</h2>
-        <ul>
-          <li>Improve testing evidence</li>
-          <li>Enhance DevOps pipeline</li>
-          <li>Continue deployment planning</li>
-          <li>Refine the quiz experience further</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h2>Team Roles</h2>
-        <ul>
-          <li>Business Analyst: Tamires</li>
-          <li>Developer: Thomas</li>
-          <li>IT Operations: Luan</li>
-          <li>Testing: Shared (previously assigned to Asia)</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h2>Functional Requirements</h2>
-        <ul>
-          <li>The system asks the user quiz questions</li>
-          <li>Questions are selected randomly</li>
-          <li>Each question has 4 possible answers, with only 1 correct</li>
-          <li>The user starts with €10</li>
-          <li>Each correct answer doubles the current amount</li>
-          <li>After each question, the user can choose to continue or stop</li>
-          <li>If the user answers incorrectly, they lose all the money</li>
-          <li>The user can restart the game after losing</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h2>Notes</h2>
-        <p>
-          This project is inspired by <strong>"Who Wants to Be a Millionaire"</strong>
-          and focuses on applying DevOps practices rather than building a complex application.
-        </p>
-      </div>
-
-      {% if last_winner %}
-      <div class="card">
-        <h2>Last Winner</h2>
-        <p><strong>{{ last_winner.full_name }}</strong></p>
-        <p>Prize: {{ last_winner.final_amount_display }}</p>
-        <p>Correct answers: {{ last_winner.correct_answers }}</p>
-        <p>Date: {{ last_winner.ended_at_display }}</p>
-      </div>
-      {% endif %}
-
-      <div class="card highlight-card">
-        <h2>Play for the Top Prize</h2>
-        <p>
-          Start with <strong>€10</strong>, answer random questions correctly,
-          double your money, and decide whether to continue or stop.
-        </p>
-        <div class="result-score">{{ top_prize }}</div>
-
-        <div class="actions">
-          {% if user_name %}
-            <a class="button-link" href="/start">Start Quiz</a>
-            <a class="button-link secondary" href="/account">My Account</a>
-            <a class="button-link secondary" href="/ranking">Ranking</a>
-            <a class="button-link secondary" href="/logout">Logout</a>
-          {% else %}
-            <a class="button-link" href="/register">Register</a>
-            <a class="button-link secondary" href="/login">Login</a>
-            <a class="button-link secondary" href="/ranking">Ranking</a>
-          {% endif %}
-        </div>
-
-        <div class="health-pill">
-          <span class="health-dot"></span>
-          Service status: healthy
-        </div>
-      </div>
-    </section>
-
-    <p class="footer-note">
-      Ops check available at <strong>/health</strong>
+{% block content %}
+<div class="container">
+  <section class="hero hero-home">
+    <div class="hero-badge">Hosted Quiz Application</div>
+    <h1>DevOps Quiz</h1>
+    <p class="subtitle hero-subtitle">
+      A simple quiz application inspired by “Who Wants to Be a Millionaire”,
+      built to demonstrate DevOps practices through a working hosted solution.
     </p>
-  </div>
-</body>
-</html>
+
+    {% if user_name %}
+      <p class="welcome-text">Welcome, {{ user_name }}!</p>
+    {% endif %}
+  </section>
+
+  <section class="dashboard-grid">
+    <div class="card highlight-card hero-panel">
+      <div class="hero-panel-top">
+        <div>
+          <h2>Play for the Top Prize</h2>
+          <p>
+            Answer random questions correctly, build your prize step by step, and decide whether to continue or stop.
+          </p>
+        </div>
+
+        <div class="top-prize-box">
+          <span class="top-prize-label">Top Prize</span>
+          <div class="result-score">{{ top_prize }}</div>
+        </div>
+      </div>
+
+      <div class="hero-panel-bottom">
+        <div class="actions hero-actions">
+          {% if user_name %}
+            <a class="button-link" href="/start">Play</a>
+          {% else %}
+            <a class="button-link" href="/login">Play</a>
+          {% endif %}
+
+          <div class="health-pill">
+            <span class="health-dot"></span>
+            Service status: healthy
+          </div>
+        </div>
+
+        <p class="quick-note">
+          Use the navigation bar to access ranking, account, login, and other sections of the system.
+        </p>
+      </div>
+    </div>
+
+    {% if last_winner %}
+    <div class="card stat-card">
+      <h3>Last Winner</h3>
+      <p><strong>{{ last_winner.full_name }}</strong></p>
+      <p>Prize: {{ last_winner.final_amount_display }}</p>
+      <p>Correct answers: {{ last_winner.correct_answers }}</p>
+      <p>Date: {{ last_winner.ended_at_display }}</p>
+    </div>
+    {% endif %}
+
+    <div class="card stat-card">
+      <h3>Project Overview</h3>
+      <p>
+        This project is a simple quiz application inspired by
+        <strong>"Who Wants to Be a Millionaire"</strong>.
+      </p>
+      <p>
+        The goal is not to build a complex product, but to apply DevOps practices such as:
+      </p>
+      <ul>
+        <li>Continuous Integration (GitHub Actions)</li>
+        <li>Containerisation (Docker)</li>
+        <li>Version Control (GitHub)</li>
+      </ul>
+    </div>
+
+    <div class="card stat-card">
+      <h3>Current Status</h3>
+      <ul>
+        <li>Initial Python quiz structure created</li>
+        <li>Docker container working locally</li>
+        <li>CI pipeline configured</li>
+        <li>Project structure organised</li>
+        <li>Hosted web version available for demo and presentation</li>
+      </ul>
+    </div>
+
+    <div class="card stat-card">
+      <h3>Team Roles</h3>
+      <ul>
+        <li>Business Analyst: Tamires</li>
+        <li>IT Operations: Luan</li>
+        <li>Development/Testing: Luan and Tamires</li>
+        <li>Initial Quiz Structure: Thomas</li>
+      </ul>
+    </div>
+
+    <div class="card stat-card">
+      <h3>Functional Requirements</h3>
+      <ul>
+        <li>The system asks the user quiz questions</li>
+        <li>Questions are selected randomly</li>
+        <li>Each question has 4 possible answers, with only 1 correct</li>
+        <li>The player secures €10 only after the first correct answer</li>
+        <li>Each new correct answer increases the prize according to the game ladder</li>
+        <li>After each question, the user can choose to continue or stop</li>
+        <li>If the user answers incorrectly, they lose all the money</li>
+        <li>The user can restart the game after losing</li>
+      </ul>
+    </div>
+
+    <div class="card stat-card">
+      <h3>Notes</h3>
+      <p>
+        This project is inspired by <strong>"Who Wants to Be a Millionaire"</strong>
+        and focuses on applying DevOps practices rather than building a complex application.
+      </p>
+    </div>
+  </section>
+
+  <p class="footer-note">
+    Ops check available at <strong>/health</strong>
+  </p>
+</div>
+{% endblock %}

@@ -1,57 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-</head>
-<body>
-  <div class="container">
-    <section class="hero">
-      <div class="hero-badge">Create Account</div>
-      <h1>Register</h1>
-      <p class="subtitle">Create your account to access the quiz system.</p>
-    </section>
+{% extends "base.html" %}
 
-    <div class="result-wrap">
-      <div class="card">
-        {% if error %}
-          <p style="color:#ffb4b4; font-weight:700;">{{ error }}</p>
-        {% endif %}
+{% block title %}Register{% endblock %}
 
-        {% if success %}
-          <p style="color:#b9ffd0; font-weight:700;">{{ success }}</p>
-        {% endif %}
+{% block content %}
+<div class="container">
+  <section class="hero">
+    <div class="hero-badge">Create Account</div>
+    <h1>Register</h1>
+    <p class="subtitle">Create your account to access the quiz system.</p>
+  </section>
 
-        <form method="POST" class="answers">
-          <label>
-            <div class="stat-label">Full Name</div>
-            <input type="text" name="full_name" required style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.06); color:white;">
-          </label>
+  <div class="form-card">
+    <div class="card">
+      {% if error %}
+        <p class="message-error">{{ error }}</p>
+      {% endif %}
 
-          <label>
-            <div class="stat-label">Email</div>
-            <input type="email" name="email" required style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.06); color:white;">
-          </label>
+      {% if success %}
+        <p class="message-success">{{ success }}</p>
+      {% endif %}
 
-          <label>
-            <div class="stat-label">Password</div>
-            <input type="password" name="password" required style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.06); color:white;">
-          </label>
+      <form method="POST" class="form-grid">
+        <label>
+          <span class="form-label">Full Name</span>
+          <input class="form-input" type="text" name="full_name" required>
+        </label>
 
-          <label>
-            <div class="stat-label">Date of Birth</div>
-            <input type="date" name="date_of_birth" required style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.06); color:white;">
-          </label>
+        <label>
+          <span class="form-label">Email</span>
+          <input class="form-input" type="email" name="email" required>
+        </label>
 
-          <div class="actions">
-            <button type="submit">Create Account</button>
-            <a class="button-link secondary" href="/">Back to Home</a>
-          </div>
-        </form>
-      </div>
+        <label>
+          <span class="form-label">Password</span>
+          <input class="form-input" type="password" name="password" required>
+        </label>
+
+        <label>
+          <span class="form-label">Date of Birth</span>
+          <input class="form-input" type="date" name="date_of_birth" required>
+        </label>
+
+        <div class="actions">
+          <button type="submit">Create Account</button>
+          <a class="button-link secondary" href="/login">Already have an account?</a>
+        </div>
+      </form>
     </div>
   </div>
-</body>
-</html>
+</div>
+{% endblock %}

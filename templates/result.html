@@ -1,37 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quiz Result</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-</head>
-<body>
-  <div class="container">
-    <div class="result-wrap">
-      <section class="hero">
-        <div class="hero-badge">Quiz Result</div>
-        <h1>{{ result_title }}</h1>
-        <p class="subtitle">{{ result_message }}</p>
-      </section>
+{% extends "base.html" %}
 
-      <div class="card highlight-card">
-        <h2>Your Final Prize</h2>
-        <div class="result-score">{{ won_amount }}</div>
-        <p class="result-message">
-          Correct answers: <strong>{{ score }}/{{ total }}</strong>
-        </p>
+{% block title %}Quiz Result{% endblock %}
 
-        <div class="actions">
-          <a class="button-link" href="/start">Play Again</a>
-          <a class="button-link secondary" href="/">Back to Home</a>
-        </div>
-      </div>
+{% block content %}
+<div class="container">
+  <div class="result-wrap">
+    <section class="hero">
+      <div class="hero-badge">Quiz Result</div>
+      <h1>{{ result_title }}</h1>
+      <p class="subtitle">{{ result_message }}</p>
+    </section>
 
-      <p class="footer-note">
-        Thanks for playing the DevOps Quiz.
+    <div class="card highlight-card">
+      <h2>Your Final Prize</h2>
+      <div class="result-score">{{ won_amount }}</div>
+      <p class="result-message">
+        Correct answers: <strong>{{ score }}/{{ total }}</strong>
       </p>
+
+      <div class="actions">
+        <a class="button-link" href="/start">Play Again</a>
+        <a class="button-link secondary" href="/">Back to Home</a>
+        <a class="button-link secondary" href="/ranking">Ranking</a>
+      </div>
     </div>
+
+    <p class="footer-note">
+      Thanks for playing the DevOps Quiz.
+    </p>
   </div>
-</body>
-</html>
+</div>
+{% endblock %}
