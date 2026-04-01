@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="hero-badge">User Access</div>
+      <h1>Login</h1>
+      <p class="subtitle">Sign in to access your account and play the quiz.</p>
+    </section>
+
+    <div class="result-wrap">
+      <div class="card">
+        {% if error %}
+          <p style="color:#ffb4b4; font-weight:700;">{{ error }}</p>
+        {% endif %}
+
+        {% if success %}
+          <p style="color:#b9ffd0; font-weight:700;">{{ success }}</p>
+        {% endif %}
+
+        <form method="POST" class="answers">
+          <label>
+            <div class="stat-label">Email</div>
+            <input type="email" name="email" required style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.06); color:white;">
+          </label>
+
+          <label>
+            <div class="stat-label">Password</div>
+            <input type="password" name="password" required style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.06); color:white;">
+          </label>
+
+          <div class="actions">
+            <button type="submit">Login</button>
+            <a class="button-link secondary" href="/">Back to Home</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

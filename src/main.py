@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 from src.manageQuiz import questions
-from src.auth import create_user
+from src.auth import create_user, verify_user
 from datetime import date, datetime
 import random
 
@@ -49,6 +49,12 @@ def register():
         password = request.form.get("password", "").strip()
         date_of_birth = request.form.get("date_of_birth", "").strip()
 
+        if len(full_name) < 2 or not any(char.isalpha() for char in full_name):
+            return render_template("register.html", error="Please enter a valid full name.", success=None)
+
+        if len(password) < 6:
+            return render_template("register.html", error="Password must be at least 6 characters long.", success=None)
+
         try:
             dob = datetime.strptime(date_of_birth, "%Y-%m-%d").date()
             today = date.today()
@@ -56,6 +62,13 @@ def register():
             is_18_or_over = age >= 18
         except ValueError:
             return render_template("register.html", error="Invalid date of birth.", success=None)
+
+        if not is_18_or_over:
+            return render_template(
+                "register.html",
+                error="You must be 18 or older to register for this game.",
+                success=None
+            )
 
         created, message = create_user(
             full_name=full_name,
@@ -73,17 +86,57 @@ def register():
     return render_template("register.html", error=error, success=success)
 
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    error = None
+    success = None
+
+    if request.method == "POST":
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "").strip()
+
+        user = verify_user(email, password)
+
+        if user:
+            session["user_id"] = user["id"]
+            session["user_name"] = user["full_name"]
+            session["user_email"] = user["email"]
+            session["is_18_or_over"] = user["is_18_or_over"]
+            return redirect(url_for("home"))
+        else:
+            error = "Invalid email or password."
+
+    return render_template("login.html", error=error, success=success)
+
+
+@app.route("/logout")
+def logout():
+    session.pop("user_id", None)
+    session.pop("user_name", None)
+    session.pop("user_email", None)
+    session.pop("is_18_or_over", None)
+    session.pop("question_order", None)
+    session.pop("current_index", None)
+    session.pop("money", None)
+    session.pop("game_over", None)
+    return redirect(url_for("home"))
+
+
 @app.route("/")
 def home():
     prize_ladder = get_prize_ladder()
     return render_template(
         "index.html",
-        top_prize=prize_ladder[-1]
+        top_prize=prize_ladder[-1],
+        user_name=session.get("user_name")
     )
 
 
 @app.route("/start")
 def start():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
     start_new_game()
     return redirect(url_for("quiz"))
 
