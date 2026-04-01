@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Result</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <div class="result-wrap">
+      <section class="hero">
+        <div class="hero-badge">Quiz Completed</div>
+        <h1>Well Done!</h1>
+        <p class="subtitle">You reached the end of the DevOps Quiz.</p>
+      </section>
+
+      <div class="card highlight-card">
+        <h2>Your Final Score</h2>
+        <div class="result-score">{{ score }}/{{ total }}</div>
+        <p class="result-message">
+          Prize won: <strong>{{ won_amount }}</strong>
+        </p>
+        <p class="result-message">
+          This hosted version demonstrates application availability, health checks,
+          deployment workflow, and a working quiz experience through the web interface.
+        </p>
+
+        <a class="button-link" href="/">Back to Home</a>
+      </div>
+
+      <p class="footer-note">
+        Thanks for playing the DevOps Quiz.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

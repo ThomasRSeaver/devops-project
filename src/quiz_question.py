@@ -10,3 +10,6 @@ class quiz_question:
         self.wrong1 = wrong1
         self.wrong2 = wrong2
         self.wrong3 = wrong3
+
+    def get_options(self):
+        return [self.answer_text, self.wrong1, self.wrong2, self.wrong3]
