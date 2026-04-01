@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 from src.manageQuiz import questions
 from src.auth import create_user, verify_user
+from src.game_session import create_game_session, update_game_session_progress, finish_game_session
 from datetime import date, datetime
 import random
 
@@ -31,6 +32,9 @@ def start_new_game():
     session["current_index"] = 0
     session["money_won"] = 0
     session["game_over"] = False
+
+    game_session_id = create_game_session(session["user_id"])
+    session["game_session_id"] = game_session_id
 
 
 @app.route("/health")
@@ -120,6 +124,7 @@ def logout():
     session.pop("money_won", None)
     session.pop("game_over", None)
     session.pop("rules_accepted", None)
+    session.pop("game_session_id", None)
     return redirect(url_for("home"))
 
 
@@ -176,9 +181,12 @@ def quiz():
     question_order = session["question_order"]
     current_index = session["current_index"]
     money_won = session["money_won"]
+    game_session_id = session.get("game_session_id")
 
     if current_index >= len(question_order):
         session["game_over"] = True
+        if game_session_id:
+            finish_game_session(game_session_id, money_won, "won")
         return render_template(
             "result.html",
             score=len(question_order),
@@ -199,6 +207,8 @@ def quiz():
 
         if action == "stop":
             session["game_over"] = True
+            if game_session_id:
+                finish_game_session(game_session_id, money_won, "stopped")
             return render_template(
                 "result.html",
                 score=current_index,
@@ -214,8 +224,18 @@ def quiz():
             session["money_won"] = current_question_value
             session["current_index"] = current_index + 1
 
+            if game_session_id:
+                update_game_session_progress(
+                    game_session_id,
+                    session["current_index"],
+                    session["current_index"],
+                    session["money_won"]
+                )
+
             if session["current_index"] >= len(question_order):
                 session["game_over"] = True
+                if game_session_id:
+                    finish_game_session(game_session_id, session["money_won"], "won")
                 return render_template(
                     "result.html",
                     score=len(question_order),
@@ -229,6 +249,8 @@ def quiz():
 
         session["game_over"] = True
         session["money_won"] = 0
+        if game_session_id:
+            finish_game_session(game_session_id, 0, "lost")
         return render_template(
             "result.html",
             score=current_index,
