@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz Question</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="hero-badge">Question {{ index + 1 }} / {{ total }}</div>
+      <h1>DevOps Quiz Challenge</h1>
+      <p class="subtitle">Choose the best answer and move up through the prize ladder.</p>
+    </section>
+
+    <div class="layout">
+      <div class="card">
+        <p class="question-number">Current Question</p>
+        <h2 class="question-title">{{ question.question_text }}</h2>
+
+        <form method="POST" class="answers">
+          {% for option in options %}
+            <label class="answer-option">
+              <input type="radio" name="answer" value="{{ option }}" required />
+              <div class="answer-box">
+                <div class="answer-letter">{{ ['A', 'B', 'C', 'D'][loop.index0] }}</div>
+                <div class="answer-text">{{ option }}</div>
+              </div>
+            </label>
+          {% endfor %}
+
+          <button type="submit">Lock In Answer</button>
+        </form>
+      </div>
+
+      <div class="card sidebar-card">
+        <h3>Game Progress</h3>
+
+        <div class="stat-box">
+          <div class="stat-label">Current score</div>
+          <div class="stat-value">{{ score }}</div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-label">Current prize</div>
+          <div class="stat-value">{{ current_prize }}</div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-label">Questions remaining</div>
+          <div class="stat-value">{{ total - (index + 1) }}</div>
+        </div>
+
+        <h3 style="margin-top: 22px;">Prize Ladder</h3>
+        <ul class="ladder">
+          {% for prize in prize_ladder|reverse %}
+            {% set actual_index = total - loop.index0 - 1 %}
+            <li class="{% if actual_index == index %}active{% endif %}">
+              {{ prize }}
+            </li>
+          {% endfor %}
+        </ul>
+
+        <div class="health-pill">
+          <span class="health-dot"></span>
+          System online
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
