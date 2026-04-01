@@ -2,7 +2,9 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for, s
 from src.manageQuiz import questions
 from src.auth import create_user, verify_user
 from src.game_session import create_game_session, update_game_session_progress, finish_game_session
+from src.game_answer import save_game_answer
 from src.ranking import get_ranking, get_last_winner
+from src.account import get_user_by_id, get_user_game_history
 from datetime import date, datetime
 import random
 
@@ -161,6 +163,35 @@ def home():
     )
 
 
+@app.route("/account")
+def account():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    user = get_user_by_id(session["user_id"])
+    history_rows = get_user_game_history(session["user_id"])
+
+    user_data = {
+        "full_name": user["full_name"],
+        "email": user["email"],
+        "date_of_birth": user["date_of_birth"],
+        "is_18_or_over": user["is_18_or_over"],
+        "created_at_display": format_datetime(user["created_at"])
+    }
+
+    history = []
+    for row in history_rows:
+        history.append({
+            "id": row["id"],
+            "correct_answers": row["correct_answers"],
+            "final_amount_display": format_money(row["final_amount"]),
+            "status": row["status"],
+            "ended_at_display": format_datetime(row["ended_at"])
+        })
+
+    return render_template("account.html", user=user_data, history=history)
+
+
 @app.route("/ranking")
 def ranking():
     rows = get_ranking()
@@ -236,6 +267,7 @@ def quiz():
             result_message="You answered all questions correctly and reached the top prize."
         )
 
+    question_id = question_order[current_index] + 1
     question = questions[question_order[current_index]]
     options = question.get_options()
     random.shuffle(options)
@@ -259,8 +291,17 @@ def quiz():
             )
 
         selected = request.form.get("answer")
+        is_correct = selected == question.answer_text
 
-        if selected == question.answer_text:
+        if game_session_id and selected:
+            save_game_answer(
+                session_id=game_session_id,
+                question_id=question_id,
+                selected_answer=selected,
+                is_correct=is_correct
+            )
+
+        if is_correct:
             session["money_won"] = current_question_value
             session["current_index"] = current_index + 1
 

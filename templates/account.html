@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Account</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <div class="hero-badge">User Account</div>
+      <h1>My Account</h1>
+      <p class="subtitle">Your account details and personal game history.</p>
+    </section>
+
+    <div class="grid">
+      <div class="card">
+        <h2>User Details</h2>
+        <p><strong>Name:</strong> {{ user.full_name }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Date of Birth:</strong> {{ user.date_of_birth }}</p>
+        <p><strong>18+ Access:</strong> {% if user.is_18_or_over %}Yes{% else %}No{% endif %}</p>
+        <p><strong>Account Created:</strong> {{ user.created_at_display }}</p>
+      </div>
+
+      <div class="card">
+        <h2>My Game History</h2>
+
+        {% if history %}
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse: collapse;">
+              <thead>
+                <tr>
+                  <th style="text-align:left; padding:12px;">Session</th>
+                  <th style="text-align:left; padding:12px;">Correct Answers</th>
+                  <th style="text-align:left; padding:12px;">Final Prize</th>
+                  <th style="text-align:left; padding:12px;">Status</th>
+                  <th style="text-align:left; padding:12px;">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in history %}
+                  <tr>
+                    <td style="padding:12px; border-top:1px solid rgba(255,255,255,0.1);">#{{ row.id }}</td>
+                    <td style="padding:12px; border-top:1px solid rgba(255,255,255,0.1);">{{ row.correct_answers }}</td>
+                    <td style="padding:12px; border-top:1px solid rgba(255,255,255,0.1);">{{ row.final_amount_display }}</td>
+                    <td style="padding:12px; border-top:1px solid rgba(255,255,255,0.1); text-transform:capitalize;">{{ row.status }}</td>
+                    <td style="padding:12px; border-top:1px solid rgba(255,255,255,0.1);">{{ row.ended_at_display }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p>No game history available yet.</p>
+        {% endif %}
+
+        <div class="actions">
+          <a class="button-link secondary" href="/">Back to Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
