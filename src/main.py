@@ -18,7 +18,7 @@ def get_prize_ladder():
     ladder = []
     amount = START_MONEY
     for _ in range(len(questions)):
-        ladder.append(format_money(amount))
+        ladder.append(amount)
         amount *= 2
     return ladder
 
@@ -29,7 +29,7 @@ def start_new_game():
 
     session["question_order"] = question_indexes
     session["current_index"] = 0
-    session["money"] = START_MONEY
+    session["money_won"] = 0
     session["game_over"] = False
 
 
@@ -117,8 +117,9 @@ def logout():
     session.pop("is_18_or_over", None)
     session.pop("question_order", None)
     session.pop("current_index", None)
-    session.pop("money", None)
+    session.pop("money_won", None)
     session.pop("game_over", None)
+    session.pop("rules_accepted", None)
     return redirect(url_for("home"))
 
 
@@ -127,7 +128,7 @@ def home():
     prize_ladder = get_prize_ladder()
     return render_template(
         "index.html",
-        top_prize=prize_ladder[-1],
+        top_prize=format_money(prize_ladder[-1]),
         user_name=session.get("user_name")
     )
 
@@ -137,19 +138,44 @@ def start():
     if "user_id" not in session:
         return redirect(url_for("login"))
 
-    start_new_game()
-    return redirect(url_for("quiz"))
+    return redirect(url_for("rules"))
+
+
+@app.route("/rules", methods=["GET", "POST"])
+def rules():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    error = None
+
+    if request.method == "POST":
+        agree = request.form.get("agree")
+
+        if agree == "yes":
+            session["rules_accepted"] = True
+            start_new_game()
+            return redirect(url_for("quiz"))
+
+        error = "You must agree to the rules before continuing."
+
+    return render_template("rules.html", error=error)
 
 
 @app.route("/quiz", methods=["GET", "POST"])
 def quiz():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    if not session.get("rules_accepted"):
+        return redirect(url_for("rules"))
+
     if "question_order" not in session or session.get("game_over"):
         return redirect(url_for("start"))
 
     prize_ladder = get_prize_ladder()
     question_order = session["question_order"]
     current_index = session["current_index"]
-    current_money = session["money"]
+    money_won = session["money_won"]
 
     if current_index >= len(question_order):
         session["game_over"] = True
@@ -157,7 +183,7 @@ def quiz():
             "result.html",
             score=len(question_order),
             total=len(question_order),
-            won_amount=format_money(current_money),
+            won_amount=format_money(money_won),
             result_title="Congratulations!",
             result_message="You answered all questions correctly and reached the top prize."
         )
@@ -165,6 +191,8 @@ def quiz():
     question = questions[question_order[current_index]]
     options = question.get_options()
     random.shuffle(options)
+
+    current_question_value = prize_ladder[current_index]
 
     if request.method == "POST":
         action = request.form.get("action")
@@ -175,7 +203,7 @@ def quiz():
                 "result.html",
                 score=current_index,
                 total=len(question_order),
-                won_amount=format_money(current_money),
+                won_amount=format_money(money_won),
                 result_title="You Chose to Stop",
                 result_message="You decided to stop the game and keep your current prize."
             )
@@ -183,8 +211,7 @@ def quiz():
         selected = request.form.get("answer")
 
         if selected == question.answer_text:
-            new_money = current_money * 2
-            session["money"] = new_money
+            session["money_won"] = current_question_value
             session["current_index"] = current_index + 1
 
             if session["current_index"] >= len(question_order):
@@ -193,7 +220,7 @@ def quiz():
                     "result.html",
                     score=len(question_order),
                     total=len(question_order),
-                    won_amount=format_money(new_money),
+                    won_amount=format_money(session["money_won"]),
                     result_title="Congratulations!",
                     result_message="You answered all questions correctly and reached the top prize."
                 )
@@ -201,7 +228,7 @@ def quiz():
             return redirect(url_for("quiz"))
 
         session["game_over"] = True
-        session["money"] = 0
+        session["money_won"] = 0
         return render_template(
             "result.html",
             score=current_index,
@@ -211,7 +238,7 @@ def quiz():
             result_message="You answered incorrectly and lost all the money."
         )
 
-    next_amount = current_money * 2
+    next_amount = current_question_value
     current_prize_step = current_index
 
     return render_template(
@@ -220,9 +247,9 @@ def quiz():
         options=options,
         index=current_index,
         total=len(question_order),
-        current_money=format_money(current_money),
+        current_money=format_money(money_won),
         next_amount=format_money(next_amount),
-        prize_ladder=prize_ladder,
+        prize_ladder=[format_money(value) for value in prize_ladder],
         current_prize_step=current_prize_step
     )
 
