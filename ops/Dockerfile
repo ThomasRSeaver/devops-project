@@ -6,6 +6,11 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src/ /app/src
+COPY templates/ /app/templates
+COPY static/ /app/static
+
+RUN python -m src.init_db
+RUN python -m src.seed_data
 
 EXPOSE 5000
 
