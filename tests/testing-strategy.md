@@ -1,19 +1,22 @@
 # Testing Strategy
 
-Due to changes in team structure, testing responsibilities are shared across the team. In practice, both Tamires and Luan actively contributed to testing, validation, and system verification alongside development work.
+## Overview
 
-The testing approach focuses on validating the application at different levels: application logic, user interface, and containerised execution.
+Testing responsibilities are shared across the team, reflecting a practical DevOps approach where validation is integrated into development and operations.
+
+The testing strategy focuses on verifying the system at multiple levels: application logic, user interface, container execution, and deployment readiness.
 
 ---
 
 ## Testing Approach
 
-The project follows a lightweight but practical testing strategy based on:
+The project follows a lightweight but effective testing approach based on:
 
-- Functional validation of core quiz logic
-- UI validation through browser interaction
+- Functional validation of core application behaviour
+- UI validation through real user interaction
 - Container validation using Docker
-- Service-level checks using HTTP endpoints
+- Service validation using HTTP endpoints
+- Automated smoke testing through CI
 
 ---
 
@@ -21,15 +24,15 @@ The project follows a lightweight but practical testing strategy based on:
 
 ### 1. Functional Testing
 
-Functional testing ensures that the quiz logic behaves as expected.
+Functional testing ensures that the application behaves correctly from a user perspective.
 
 Examples:
 - User can register and log in successfully
-- Quiz starts correctly after accepting rules
-- Questions are displayed with multiple options
-- Correct answers increase the prize amount
-- Incorrect answers end the game
-- User can choose to stop and keep winnings
+- Age validation is enforced during registration
+- Rules must be accepted before starting the quiz
+- Quiz logic updates correctly based on answers
+- Game ends correctly on incorrect answers
+- User can stop and keep winnings
 
 ---
 
@@ -39,67 +42,46 @@ UI testing is performed manually using the browser to confirm that:
 
 - Pages load correctly (home, login, register, quiz, result, ranking, account)
 - Navigation flows correctly between pages
-- Data is displayed properly (user info, prize ladder, history)
-- Layout remains readable and consistent
+- User data is displayed properly
+- Layout remains clear and consistent
 
 ---
 
 ### 3. Container Testing (Docker)
 
-The application is tested inside a Docker container to ensure it runs independently of the local environment.
+The application is tested inside a Docker container to ensure consistent execution.
 
-The following validations were performed:
+The following validations are performed:
 
-- Docker image successfully builds from the provided Dockerfile
+- Docker image builds successfully
 - Container runs and exposes port 5000
-- Templates and static files load correctly inside the container
-- Database is initialised and seeded automatically during build
-
-This ensures the application is fully containerised and portable.
+- Application loads correctly inside the container
+- Templates and static files render properly
+- Database is initialised during container setup
 
 ---
 
 ### 4. Service / Health Testing
 
-A health endpoint is used to verify that the application is running correctly inside the container.
+A health endpoint is used to confirm that the application is running:
 
 Example:
 GET /health → returns status "ok"
 
-This is also used in the CI pipeline as a basic availability check.
+This endpoint is also used in the CI pipeline.
 
 ---
 
 ### 5. CI Smoke Testing
 
-GitHub Actions is used to automatically validate the application on push and pull request.
+GitHub Actions is used to automatically validate the application.
 
 The pipeline performs:
 - Docker image build
 - Container execution
 - Health endpoint verification
 
-This provides quick feedback that the application is deployable.
-
----
-
-## Shared Testing Responsibilities
-
-Testing is not limited to a single role and is distributed as follows:
-
-- Tamires:
-  - Defines expected behaviour
-  - Documents testing evidence and scenarios
-  - Performs functional and UI validation
-  - Verifies system flow and consistency
-
-- Luan:
-  - Validates Docker environment and container behaviour
-  - Supports CI pipeline execution
-  - Assists with system-level testing
-
-- Thomas:
-  - Validates core application logic during development
+This ensures the application remains deployable after changes.
 
 ---
 
@@ -107,9 +89,9 @@ Testing is not limited to a single role and is distributed as follows:
 
 The testing strategy combines manual validation, container-based testing, and automated CI checks.
 
-Although lightweight, this approach ensures that:
-- The application logic works correctly
-- The user interface behaves as expected
-- The system runs reliably inside a containerised environment
+This ensures that:
+- The application behaves correctly
+- The user interface supports the system flow
+- The containerised environment runs reliably
 
-This reflects a practical DevOps-oriented testing approach focused on real system behaviour rather than isolated unit testing.
+The approach reflects a practical DevOps workflow focused on real system behaviour.
