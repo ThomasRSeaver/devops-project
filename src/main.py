@@ -42,7 +42,7 @@ def start_new_game():
 
     session["question_order"] = question_indexes
     session["current_index"] = 0
-    session["money_won"] = 0
+    session["money_won"] = START_MONEY
     session["game_over"] = False
 
     game_session_id = create_game_session(session["user_id"])
@@ -273,11 +273,12 @@ def quiz():
     random.shuffle(options)
 
     current_question_value = prize_ladder[current_index]
+    can_stop = current_index > 0
 
     if request.method == "POST":
         action = request.form.get("action")
 
-        if action == "stop":
+        if action == "stop" and can_stop:
             session["game_over"] = True
             if game_session_id:
                 finish_game_session(game_session_id, money_won, "stopped")
@@ -302,7 +303,7 @@ def quiz():
             )
 
         if is_correct:
-            session["money_won"] = current_question_value
+            session["money_won"] = current_question_value * 2
             session["current_index"] = current_index + 1
 
             if game_session_id:
@@ -341,7 +342,7 @@ def quiz():
             result_message="You answered incorrectly and lost all the money."
         )
 
-    next_amount = current_question_value
+    next_amount = current_question_value * 2
     current_prize_step = current_index
 
     return render_template(
@@ -353,7 +354,8 @@ def quiz():
         current_money=format_money(money_won),
         next_amount=format_money(next_amount),
         prize_ladder=[format_money(value) for value in prize_ladder],
-        current_prize_step=current_prize_step
+        current_prize_step=current_prize_step,
+        can_stop=can_stop
     )
 
 
